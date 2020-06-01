@@ -21,6 +21,7 @@
   "license": "MIT",
   "dependencies": {
     "esm": "^3.2.25",
+    "glob": "^7.1.6",
     "prompt": "^1.0.0",
     "shelljs": "^0.8.4"
   }
