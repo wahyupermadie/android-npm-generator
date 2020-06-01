@@ -66,16 +66,16 @@ function setupPackage(){
 
 	if (mkdirpath('android-starterpack/app/src/androidTest/java'+newPath)){
 		ncp('android-starterpack/app/src/androidTest/java/com/godohdev/androidstarterkit', 'android-starterpack/app/src/androidTest/java'+newPath, function (err) {
-		if (err) {
-			return console.error(err);
-		}
-			console.log('done!');
+			if (err) {
+				return console.error(err);
+			}else{
+				if(path[0].toLowerCase() != "com"){
+					deleteFolderRecursive('android-starterpack/app/src/androidTest/java/com')
+				}else{
+					deleteFolderRecursive('android-starterpack/app/src/androidTest/java/com/godohdev')
+				}
+			}
 		});
-		if(path[0].toLowerCase() != "com"){
-			deleteFolderRecursive('android-starterpack/app/src/androidTest/java/com')
-		}else{
-			deleteFolderRecursive('android-starterpack/app/src/androidTest/java/com/godohdev')
-		}
 	}
 	
 }
