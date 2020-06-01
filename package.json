@@ -1,11 +1,15 @@
 {
-  "name": "@wahyupermadie_/create-project-android",
+  "name": "create-android-app",
   "version": "1.0.0",
   "description": "CLI for creating android project",
   "main": "index.js",
   "bin": {
-    "@wagtypermadie_/create-project-android": "bin/create-project",
-    "create-project-android": "bin/create-project"
+    "@wagtypermadie_/create-android-app": "bin/create-project",
+    "create-android-app": "bin/create-project"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wahyupermadie/android-npm-generator.git"
   },
   "publishConfig": {
     "access": "public"
@@ -15,7 +19,11 @@
   },
   "keywords": [
     "cli",
-    "create-project-android"
+    "create-android-app"
+  ],
+  "files": [
+    "bin",
+    "src"
   ],
   "author": "Wahyu Permadi",
   "license": "MIT",
