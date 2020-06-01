@@ -1,3 +1,5 @@
+![Node.js CI](https://github.com/wahyupermadie/android-npm-generator/workflows/Node.js%20CI/badge.svg)
+
 # Generate Android Starter Kit
 
 Generate Android MVVM Starter Kit.
