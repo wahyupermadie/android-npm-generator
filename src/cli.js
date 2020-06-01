@@ -1,8 +1,10 @@
 const shell = require('shelljs')
 const prompt = require('prompt');
 const fs = require('fs');
-var glob = require("glob")
-
+const glob = require("glob")
+const ncp = require('ncp').ncp;
+const Path = require('path');
+ncp.limit = 0;
 var appName = ""
 var packageName = ""
 
@@ -50,8 +52,56 @@ function getFilesInDirectory(){
 			for(var i = 0; i < paths.length ; i++){
 				renameFilesInDirectries(paths[i])
 			}
+			setupPackage()
 		}
 	});
+}
+
+function setupPackage(){
+	var path = packageName.split('.')
+	var newPath = ""
+	for(var i=0; i<path.length; i++){
+		newPath = newPath+'/'+path[i]
+	}
+
+	if (mkdirpath('android-starterpack/app/src/androidTest/java'+newPath)){
+		ncp('android-starterpack/app/src/androidTest/java/com/godohdev/androidstarterkit', 'android-starterpack/app/src/androidTest/java'+newPath, function (err) {
+		if (err) {
+			return console.error(err);
+		}
+			console.log('done!');
+		});
+		if(path[0].toLowerCase() != "com"){
+			deleteFolderRecursive('android-starterpack/app/src/androidTest/java/com')
+		}else{
+			deleteFolderRecursive('android-starterpack/app/src/androidTest/java/com/godohdev')
+		}
+	}
+	
+}
+
+const deleteFolderRecursive = function(path) {
+	if (fs.existsSync(path)) {
+		fs.readdirSync(path).forEach((file, index) => {
+		const curPath = Path.join(path, file);
+		if (fs.lstatSync(curPath).isDirectory()) { // recurse
+			deleteFolderRecursive(curPath);
+		} else { // delete file
+			fs.unlinkSync(curPath);
+		}
+		});
+		fs.rmdirSync(path);
+	}
+};
+
+// Create directory 
+function mkdirpath(dirPath)
+{
+    fs.mkdir(dirPath, {recursive: true}, err => {
+		if (err) return console.log(err)
+	})
+
+	return true
 }
 
 function renameFilesInDirectries(res) {
@@ -61,7 +111,7 @@ function renameFilesInDirectries(res) {
 		}
 		replaceValue(/com.godohdev.androidstarterkit/g, packageName, data, res)
 	 	replaceValue(/Android Starter Kit/g, appName, data, res)
-	  });
+	});
 }
 
 function replaceValue(pattern, value, data, res){
@@ -70,6 +120,7 @@ function replaceValue(pattern, value, data, res){
 		if (err) return console.log(err);
 	});
 }
+
 function onErr(err) {
     console.log(err);
     return 1;
