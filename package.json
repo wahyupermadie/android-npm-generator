@@ -1,0 +1,27 @@
+{
+  "name": "@wahyupermadie_/create-project-android",
+  "version": "1.0.0",
+  "description": "CLI for creating android project",
+  "main": "index.js",
+  "bin": {
+    "@wagtypermadie_/create-project-android": "bin/create-project",
+    "create-project-android": "bin/create-project"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "cli",
+    "create-project-android"
+  ],
+  "author": "Wahyu Permadi",
+  "license": "MIT",
+  "dependencies": {
+    "esm": "^3.2.25",
+    "prompt": "^1.0.0",
+    "shelljs": "^0.8.4"
+  }
+}
