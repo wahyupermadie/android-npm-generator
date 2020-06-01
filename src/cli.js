@@ -4,7 +4,11 @@ const fs = require('fs');
 const glob = require("glob")
 const ncp = require('ncp').ncp;
 const Path = require('path');
+const chalk = require('chalk');
+const figlet = require('figlet');
+import {cyan, yellow, magenta, red, italic, bold} from 'colorette';
 ncp.limit = 0;
+
 var appName = ""
 var packageName = ""
 
@@ -17,7 +21,8 @@ const properties = [
 ];
 
 export function cli(args){
- 	appName = process.argv.slice(2)[0]
+	initCliTitle()
+ 	appName = args.slice(2)[0]
 	if(appName == null){
 		return onError("Your app name should not empyt !")
 	}
@@ -29,12 +34,18 @@ export function cli(args){
 	});
 }
 
+function initCliTitle() {
+	console.log(
+		chalk.yellow(
+		  figlet.textSync('AndroInit', { horizontalLayout: 'full' })
+		)
+	);
+}
 function fetchGitRepo(){
 	shell.exec('git clone https://github.com/wahyupermadie/android-starterpack.git', function(code, stdout, stderr){
-		console.log('Exit code:', code);
-		console.log('Program output:', stdout);
-		console.log('Program stderr:', stderr);
+		console.log(bold(magenta("On progress "+stderr)));
 		if(code == 0){
+			deleteFolderRecursive("android-starterpack/.git")
 			getFilesInDirectory()
 		}
 	})
@@ -57,27 +68,64 @@ function getFilesInDirectory(){
 	});
 }
 
+var newPath = ""
 function setupPackage(){
 	var path = packageName.split('.')
-	var newPath = ""
 	for(var i=0; i<path.length; i++){
 		newPath = newPath+'/'+path[i]
 	}
 
-	if (mkdirpath('android-starterpack/app/src/androidTest/java'+newPath)){
-		ncp('android-starterpack/app/src/androidTest/java/com/godohdev/androidstarterkit', 'android-starterpack/app/src/androidTest/java'+newPath, function (err) {
-			if (err) {
-				return console.error(err);
+	mkdirpath('android-starterpack/app/src/androidTest/java'+newPath, setupAndroidTestPackage)
+}
+
+function setupAndroidTestPackage(){
+	console.log(cyan("Setup android test directory..."))
+	ncp('android-starterpack/app/src/androidTest/java/com/godohdev/androidstarterkit', 'android-starterpack/app/src/androidTest/java'+newPath, function (err) {
+		if (err) {
+		 	console.log(bold(red("error copying directory")));
+		}else{
+			if(packageName.split('.')[0].toLowerCase() != "com"){
+				deleteFolderRecursive('android-starterpack/app/src/androidTest/java/com')
 			}else{
-				if(path[0].toLowerCase() != "com"){
-					deleteFolderRecursive('android-starterpack/app/src/androidTest/java/com')
-				}else{
-					deleteFolderRecursive('android-starterpack/app/src/androidTest/java/com/godohdev')
-				}
+				deleteFolderRecursive('android-starterpack/app/src/androidTest/java/com/godohdev')
 			}
-		});
-	}
-	
+			console.log(italic(yellow("done")))
+			mkdirpath('android-starterpack/app/src/test/java'+newPath, setupTestPackage)
+		}
+	});
+}
+
+function setupTestPackage(){
+	console.log(cyan("Setup test directory"))
+	ncp('android-starterpack/app/src/test/java/com/godohdev/androidstarterkit', 'android-starterpack/app/src/test/java'+newPath, function (err) {
+		if (err) {
+			console.log(bold(red("error copying directory")));
+		}else{
+			if(packageName.split('.')[0].toLowerCase() != "com"){
+				deleteFolderRecursive('android-starterpack/app/src/test/java/com')
+			}else{
+				deleteFolderRecursive('android-starterpack/app/src/test/java/com/godohdev')
+			}
+			console.log(italic(yellow("done")))
+			mkdirpath('android-starterpack/app/src/main/java'+newPath, setupMainPackage)
+		}
+	});
+}
+
+function setupMainPackage(){
+	console.log(cyan("Setup main directory"))
+	ncp('android-starterpack/app/src/main/java/com/godohdev/androidstarterkit', 'android-starterpack/app/src/main/java'+newPath, function (err) {
+		if (err) {
+			console.log(bold(red("error copying directory")));
+		}else{
+			if(packageName.split('.')[0].toLowerCase() != "com"){
+				deleteFolderRecursive('android-starterpack/app/src/main/java/com')
+			}else{
+				deleteFolderRecursive('android-starterpack/app/src/main/java/com/godohdev')
+			}
+			console.log(yellow("done", italic))
+		}
+	});
 }
 
 const deleteFolderRecursive = function(path) {
@@ -86,7 +134,7 @@ const deleteFolderRecursive = function(path) {
 		const curPath = Path.join(path, file);
 		if (fs.lstatSync(curPath).isDirectory()) { // recurse
 			deleteFolderRecursive(curPath);
-		} else { // delete file
+		} else { 
 			fs.unlinkSync(curPath);
 		}
 		});
@@ -95,13 +143,14 @@ const deleteFolderRecursive = function(path) {
 };
 
 // Create directory 
-function mkdirpath(dirPath)
+function mkdirpath(dirPath, func)
 {
     fs.mkdir(dirPath, {recursive: true}, err => {
-		if (err) return console.log(err)
+		if (err) 
+			return console.log(err)
+		else 
+			func()
 	})
-
-	return true
 }
 
 function renameFilesInDirectries(res) {
@@ -122,6 +171,6 @@ function replaceValue(pattern, value, data, res){
 }
 
 function onErr(err) {
-    console.log(err);
+    console.log(bold(red(err)));
     return 1;
 }

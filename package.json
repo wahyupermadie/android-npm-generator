@@ -20,8 +20,13 @@
   "author": "Wahyu Permadi",
   "license": "MIT",
   "dependencies": {
+    "chalk": "^4.0.0",
+    "clear": "^0.1.0",
+    "colorette": "^1.2.0",
     "esm": "^3.2.25",
+    "figlet": "^1.4.0",
     "glob": "^7.1.6",
+    "mkdirp": "^1.0.4",
     "ncp": "^2.0.0",
     "prompt": "^1.0.0",
     "shelljs": "^0.8.4"
