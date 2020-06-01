@@ -4,11 +4,8 @@ Generate Android MVVM Starter Kit.
 
 ## How To Use
 ```
-    npm install
-
-    npm link
-
-    create-android-project <project name>
+    npm i create-android-project <project name>
+    npx create-android-project <project name>
 ```
 
 ## App
@@ -18,4 +15,5 @@ Generate Android MVVM Starter Kit.
 * [Dagger](https://github.com/google/dagger) - Dagger is a compile-time framework for dependency injection. It uses no reflection or runtime bytecode generation, does all its analysis at compile-time, and generates plain Java source code.
 * [OkHttp](https://github.com/square/okhttp/) - HTTP is the way modern applications network. It’s how we exchange data & media. Doing HTTP efficiently makes your stuff load faster and saves bandwidth.
 * [RxJava](https://github.com/ReactiveX/RxJava) - RxJava – Reactive Extensions for the JVM – a library for composing asynchronous and event-based programs using observable sequences for the Java VM.
+* [Glide](https://github.com/bumptech/glide) - An image loading and caching library for Android focused on smooth scrolling
 * etc
