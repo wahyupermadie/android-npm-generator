@@ -19,3 +19,6 @@ Generate Android MVVM Starter Kit.
 * [RxJava](https://github.com/ReactiveX/RxJava) - RxJava – Reactive Extensions for the JVM – a library for composing asynchronous and event-based programs using observable sequences for the Java VM.
 * [Glide](https://github.com/bumptech/glide) - An image loading and caching library for Android focused on smooth scrolling
 * etc
+
+## Reference
+* [Flipbox](http://mvvm.flipbox.co.id/)
