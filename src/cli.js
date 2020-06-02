@@ -42,7 +42,7 @@ function initCliTitle() {
 	);
 }
 function fetchGitRepo(){
-	shell.exec('git clone https://github.com/wahyupermadie/android-starterpack.git', function(code, stdout, stderr){
+	shell.exec('git clone https://github.com/wahyupermadie/android-starterpack.git '+appName, function(code, stdout, stderr){
 		console.log(bold(magenta("On progress "+stderr)));
 		if(code == 0){
 			deleteFolderRecursive("android-starterpack/.git")
