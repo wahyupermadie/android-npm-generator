@@ -1,6 +1,6 @@
 {
   "name": "create-android-app",
-  "version": "1.0.2",
+  "version": "1.0.23",
   "description": "CLI for creating android project",
   "main": "index.js",
   "bin": {
@@ -34,9 +34,9 @@
     "esm": "^3.2.25",
     "figlet": "^1.4.0",
     "glob": "^7.1.6",
+    "inquirer": "^7.1.0",
     "mkdirp": "^1.0.4",
     "ncp": "^2.0.0",
-    "prompt": "^1.0.0",
     "shelljs": "^0.8.4"
   }
 }

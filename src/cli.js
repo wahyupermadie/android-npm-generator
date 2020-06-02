@@ -1,24 +1,33 @@
 const shell = require('shelljs')
-const prompt = require('prompt');
 const fs = require('fs');
 const glob = require("glob")
 const ncp = require('ncp').ncp;
 const Path = require('path');
 const chalk = require('chalk');
 const figlet = require('figlet');
+const inquirer = require('inquirer')
+
 import {cyan, yellow, magenta, red, italic, bold} from 'colorette';
 ncp.limit = 0;
 
 var appName = ""
 var packageName = ""
 
-const properties = [
-    {
-        name: 'packagename',
-        validator: /^(?=.*[.])[a-z0-9_\.]+$/,
-        warning: 'This field should be lower case and at least one "."'
-    }
-];
+const confirmAnswerValidator = async (input) => {
+	if (input.match(/^(?=.*[.])[a-z0-9_\.]+$/)) {
+	   return true;
+	}
+	return 'This field should be lower case and at least one "."';
+ };
+
+ var questions = [
+	{
+		type: 'input',
+		name: 'packagename',
+		message: "Input your package name ex (com.wahyu.permadi) : ",
+		validate: confirmAnswerValidator
+	}
+]
 
 export function cli(args){
 	initCliTitle()
@@ -26,12 +35,11 @@ export function cli(args){
 	if(appName == null){
 		return onError("Your app name should not empty !")
 	}
-	prompt.start();
-	prompt.get(properties, function (err, result) {
-		if (err) { return onErr(err); }
-		packageName = result.packagename
+	  
+	inquirer.prompt(questions).then(answers => {
+		packageName = answers['packagename']
 		fetchGitRepo()
-	});
+	})
 }
 
 function initCliTitle() {
@@ -45,8 +53,8 @@ function fetchGitRepo(){
 	shell.exec('git clone https://github.com/wahyupermadie/android-starterpack.git '+appName, function(code, stdout, stderr){
 		console.log(bold(magenta("On progress "+stderr)));
 		if(code == 0){
-			deleteFolderRecursive("android-starterpack/.git")
-			getFilesInDirectory()
+			deleteFolderRecursive(appName+'/.git')
+			setupPackage()
 		}
 	})
 }
@@ -55,7 +63,7 @@ function getFilesInDirectory(){
 	var getDirectories = function (src, callback) {
 		glob(src + '/**/*.*', callback);
 	};
-	getDirectories('android-starterpack', function (err, res) {
+	getDirectories(appName, function (err, res) {
 		if (err) {
 			console.log('Error', err);
 		} else {
@@ -63,9 +71,13 @@ function getFilesInDirectory(){
 			for(var i = 0; i < paths.length ; i++){
 				renameFilesInDirectries(paths[i])
 			}
-			setupPackage()
+			// buildProject()
 		}
 	});
+}
+
+function buildProject() {
+	shell.exec(`cd ${answers['name']}`)
 }
 
 var newPath = ""
@@ -75,55 +87,56 @@ function setupPackage(){
 		newPath = newPath+'/'+path[i]
 	}
 
-	mkdirpath('android-starterpack/app/src/androidTest/java'+newPath, setupAndroidTestPackage)
+	mkdirpath(appName+'/app/src/androidTest/java'+newPath, setupAndroidTestPackage)
 }
 
 function setupAndroidTestPackage(){
 	console.log(cyan("Setup android test directory..."))
-	ncp('android-starterpack/app/src/androidTest/java/com/godohdev/androidstarterkit', 'android-starterpack/app/src/androidTest/java'+newPath, function (err) {
+	ncp(appName+'/app/src/androidTest/java/com/godohdev/androidstarterkit', appName+'/app/src/androidTest/java'+newPath, function (err) {
 		if (err) {
 		 	console.log(bold(red("error copying directory")));
 		}else{
 			if(packageName.split('.')[0].toLowerCase() != "com"){
-				deleteFolderRecursive('android-starterpack/app/src/androidTest/java/com')
+				deleteFolderRecursive(appName+'/app/src/androidTest/java/com')
 			}else{
-				deleteFolderRecursive('android-starterpack/app/src/androidTest/java/com/godohdev')
+				deleteFolderRecursive(appName+'/app/src/androidTest/java/com/godohdev')
 			}
 			console.log(italic(yellow("done")))
-			mkdirpath('android-starterpack/app/src/test/java'+newPath, setupTestPackage)
+			mkdirpath(appName+'/app/src/test/java'+newPath, setupTestPackage)
 		}
 	});
 }
 
 function setupTestPackage(){
 	console.log(cyan("Setup test directory"))
-	ncp('android-starterpack/app/src/test/java/com/godohdev/androidstarterkit', 'android-starterpack/app/src/test/java'+newPath, function (err) {
+	ncp(appName+'/app/src/test/java/com/godohdev/androidstarterkit', appName+'/app/src/test/java'+newPath, function (err) {
 		if (err) {
 			console.log(bold(red("error copying directory")));
 		}else{
 			if(packageName.split('.')[0].toLowerCase() != "com"){
-				deleteFolderRecursive('android-starterpack/app/src/test/java/com')
+				deleteFolderRecursive(appName+'/app/src/test/java/com')
 			}else{
-				deleteFolderRecursive('android-starterpack/app/src/test/java/com/godohdev')
+				deleteFolderRecursive(appName+'/app/src/test/java/com/godohdev')
 			}
 			console.log(italic(yellow("done")))
-			mkdirpath('android-starterpack/app/src/main/java'+newPath, setupMainPackage)
+			mkdirpath(appName+'/app/src/main/java'+newPath, setupMainPackage)
 		}
 	});
 }
 
 function setupMainPackage(){
 	console.log(cyan("Setup main directory"))
-	ncp('android-starterpack/app/src/main/java/com/godohdev/androidstarterkit', 'android-starterpack/app/src/main/java'+newPath, function (err) {
+	ncp(appName+'/app/src/main/java/com/godohdev/androidstarterkit', appName+'/app/src/main/java'+newPath, function (err) {
 		if (err) {
 			console.log(bold(red("error copying directory")));
 		}else{
 			if(packageName.split('.')[0].toLowerCase() != "com"){
-				deleteFolderRecursive('android-starterpack/app/src/main/java/com')
+				deleteFolderRecursive(appName+'/app/src/main/java/com')
 			}else{
-				deleteFolderRecursive('android-starterpack/app/src/main/java/com/godohdev')
+				deleteFolderRecursive(appName+'/app/src/main/java/com/godohdev')
 			}
 			console.log(yellow("done", italic))
+			getFilesInDirectory()
 		}
 	});
 }
@@ -154,20 +167,8 @@ function mkdirpath(dirPath, func)
 }
 
 function renameFilesInDirectries(res) {
-	fs.readFile(res, 'utf8', function (err,data) {
-		if (err) {
-		  return console.log(err);
-		}
-		replaceValue(/com.godohdev.androidstarterkit/g, packageName, data, res)
-	 	replaceValue(/Android Starter Kit/g, appName, data, res)
-	});
-}
-
-function replaceValue(pattern, value, data, res){
-	var result = data.replace(pattern, value);
-	fs.writeFile(res, result, 'utf8', function (err) {
-		if (err) return console.log(err);
-	});
+	shell.sed('-i', 'com.godohdev.androidstarterkit', packageName, res);
+	shell.sed('-i', 'Android Starter Kit', appName, res);
 }
 
 function onErr(err) {
