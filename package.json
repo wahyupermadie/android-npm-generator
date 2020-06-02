@@ -1,6 +1,6 @@
 {
   "name": "create-android-app",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "CLI for creating android project",
   "main": "index.js",
   "bin": {

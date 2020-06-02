@@ -7,8 +7,8 @@ Generate Android MVVM Starter Kit.
 
 ## How To Use
 ```
-    npm i create-android-project <project name>
-    npx create-android-project <project name>
+    npm i create-android-app <project name>
+    npx create-android-app <project name>
 ```
 
 ## App
