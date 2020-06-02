@@ -21,4 +21,4 @@ Generate Android MVVM Starter Kit.
 * etc
 
 ## Reference
-* [Flipbox](http://mvvm.flipbox.co.id/)
+* [Flipbox](https://github.com/flipboxstudio/mvvm-starter-config)

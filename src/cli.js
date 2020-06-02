@@ -24,7 +24,7 @@ export function cli(args){
 	initCliTitle()
  	appName = args.slice(2)[0]
 	if(appName == null){
-		return onError("Your app name should not empyt !")
+		return onError("Your app name should not empty !")
 	}
 	prompt.start();
 	prompt.get(properties, function (err, result) {
